@@ -1,0 +1,53 @@
+<div class="flex items-center justify-center h-screen bg-gray-100">
+    <form class="max-w-sm w-full bg-white shadow-md rounded-lg p-8" (ngSubmit)="onLogin()" #loginForm="ngForm">
+        <div>
+            <h1 class="font-bold text-xl text-blue-800">Let's Resume Together!!!</h1>
+        </div>
+
+        <div class="mb-5 mt-6">
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Your email</label>
+            <input type="email" id="email" [(ngModel)]="email" name="email"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                placeholder="name@example.com" required #emailModel="ngModel" />
+            <div *ngIf="emailModel.invalid && emailModel.touched" class="text-red-600 text-xs">
+                Email is required.
+            </div>
+        </div>
+
+        <div class="mb-5 relative">
+            <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Your password</label>
+            <input [type]="showPassword ? 'text' : 'password'" id="password" [(ngModel)]="password" name="password"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                required #passwordModel="ngModel" />
+            <button type="button" (click)="togglePasswordVisibility()"
+                class="absolute bottom-2 right-0 pr-4 flex items-center text-gray-700">
+                <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3.98 8.223C5.128 6.343 8.09 4 12 4c3.909 0 6.873 2.344 8.02 4.223m-1.196 5.596c-.993 1.294-3.524 3.181-6.824 3.181-3.3 0-5.83-1.887-6.823-3.181M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9.879 9.879l4.242 4.242m0-4.242l-4.242 4.242" />
+                </svg>
+            </button>
+            <div *ngIf="passwordModel.invalid && passwordModel.touched" class="text-red-600 text-xs">
+                Password is required.
+            </div>
+        </div>
+
+        <button type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center"
+            [disabled]="loginForm.invalid">
+            Login
+        </button>
+
+        <div class="flex w-full justify-end mt-2">
+            <a class="text-xs font-semibold text-blue-700 underline" (click)="onSignUp()">New User?</a>
+        </div>
+    </form>
+</div>

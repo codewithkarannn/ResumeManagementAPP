@@ -1,0 +1,341 @@
+<nav class=" border-gray-200 bg-black">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+
+
+        <span class="self-center text-white text-2xl font-semibold whitespace-nowrap">My Dasboard</span>
+
+       
+        <div class="hidden w-full md:block md:w-auto" id="navbar-default">
+            <ul
+                class="font-medium flex flex-col p-4 md:p-0 mt-4 border rounded-lg bg-gray-50 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+
+                <li>
+                    <a (click)="OnLogout()" class="block py-2 px-3 bg-red-600 rounded-lg text-white   ">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="w-full flex  justify-between mt-2 max-w-screen-xl   mx-auto ">
+
+    <form class="w-full mx-auto">
+        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only ">Search</label>
+        <div class="relative">
+            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                </svg>
+            </div>
+            <input type="search" id="default-search" [ngModelOptions]="{ standalone: true }" [(ngModel)]="searchQuery"
+                (input)="onSearch()"
+                class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search Candidate's Names, Email..." required />
+            <button type="submit" (click)="onSearchSubmit()"
+                class="text-white absolute end-2.5 bottom-2.5 bg-gray-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+        </div>
+    </form>
+    @if(isAdmin === true)
+    {
+    <div class="w-full flex justify-end ">
+        <button (click)="openForm()"
+            class="bg-gray-900 hover:bg-blue-700 text-white font-semibold  text-sm p-4 rounded-lg">
+            Add New Candidate
+        </button>
+    </div>
+    }
+</div>
+@if(isFormVisible == true)
+{
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+        <h2 class="text-lg font-bold mb-4">Add New Candidate</h2>
+
+        <form (ngSubmit)="onSubmit()" class="space-y-3">
+            <div class="flex w-full gap-2 justify-between">
+
+                <!-- Name Field -->
+                <div class="w-full">
+                    <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" id="name" [(ngModel)]="candidate.name" name="name"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        placeholder="Enter candidate's name" #name="ngModel" required />
+                    @if(name.invalid && name.touched)
+                    {
+                    <div class="text-red-500 text-sm">
+                        Name is required.
+                    </div>
+                    }
+
+                </div>
+                <!-- Mobile Field -->
+                <div class="w-full">
+                    <label for="mobile" class="block text-sm font-medium text-gray-700 mb-1">Mobile</label>
+                    <input type="text" id="mobile" [(ngModel)]="candidate.mobile" name="mobile"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        placeholder="Enter candidate's mobile number" pattern="[0-9]{10-12}" #mobile="ngModel"
+                        required />
+                </div>
+                @if(mobile.invalid && mobile.touched) {
+                @if(mobile.errors?.['required']) {
+                <div class="text-red-500 text-sm">Mobile number is required.</div>
+                }
+                @if(mobile.errors?.['pattern']) {
+                <div class="text-red-500 text-sm">Enter a valid 10-digit mobile number.</div>
+                }
+                }
+
+            </div>
+            <!-- Email Field -->
+            <div class="w-full">
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="email" [(ngModel)]="candidate.email" name="email"
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                    placeholder="Enter candidate's email" #email="ngModel" email required />
+            </div>
+            @if(email.invalid && email.touched) {
+            @if(email.errors?.['required']) {
+            <div class="text-red-500 text-sm">Email number is required.</div>
+            }
+            @if(email.errors?.['email']) {
+            <div class="text-red-500 text-sm">Enter a valid email id.</div>
+            }
+            }
+
+            <div class="flex justify-between w-full gap-2">
+                <!-- Status Field -->
+                <div class="w-full">
+                    <label for="statusId" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                    <select id="statusId" [(ngModel)]="candidate.statusId" name="statusId"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500">
+                        @for (item of statuses; track $index) {
+                        <option [value]="item.statusId">
+                            {{ item.statusName }}
+                        </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="w-full">
+                    <label for="country" class="block text-sm font-medium text-gray-700 mb-1">Country</label>
+                    <select id="country" [(ngModel)]="selectedCountryId" name="country"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        (change)="onCountryChange(selectedCountryId)" required>
+                        @for (item of countries; track $index) {
+                        <option [value]="item.countryId">
+                            {{ item.countryName }}
+                        </option>
+                        }
+
+
+                    </select>
+                </div>
+
+                <!-- City Field -->
+                <div class="w-full">
+                    <label for="cityId" class="block text-sm font-medium text-gray-700 mb-1">City</label>
+                    <select id="cityId" [(ngModel)]="candidate.cityId" name="cityId"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500">
+                        @for (item of cities; track $index) {
+                        <option [value]="item.cityId">
+                            {{ item.cityName }}
+                        </option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-between w-full gap-2">
+                <!-- CTC Field -->
+                <div class="w-full">
+                    <label for="ctc" class="block text-sm font-medium text-gray-700 mb-1">CTC</label>
+                    <input type="number" id="ctc" [(ngModel)]="candidate.ctc" name="ctc"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        placeholder="Enter candidate's CTC" />
+                </div>
+
+                <!-- Expected CTC Field -->
+                <div class="w-full">
+                    <label for="expectedCtc" class="block text-sm font-medium text-gray-700 mb-1">Expected CTC</label>
+                    <input type="number" id="expectedCtc" [(ngModel)]="candidate.expectedCtc" name="expectedCtc"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        placeholder="Enter candidate's expected CTC" />
+                </div>
+                <div class="w-full">
+                    <label for="interviewDate" class="block text-sm font-medium text-gray-700 mb-1">Interview
+                        Date</label>
+                    <input type="date" id="interviewDate" [(ngModel)]="candidate.interviewDate" [value]="formattedDate"
+                        name="interviewDate"
+                        class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                        (change)="onDateChange($event)" />
+                </div>
+            </div>
+
+
+            <!-- Interview Feedback Field -->
+            <div>
+                <label for="interviewFeedback" class="block text-sm font-medium text-gray-700 mb-2">Interview
+                    Feedback</label>
+                <textarea id="interviewFeedback" [(ngModel)]="candidate.interviewFeedback" name="interviewFeedback"
+                    class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                    placeholder="Enter interview feedback"></textarea>
+            </div>
+
+
+
+
+            <!-- CV File Field -->
+            <div>
+                <label for="cvFile" class="block text-sm font-medium text-gray-700">Upload CV</label>
+                <input type="file" id="cvFile" (change)="onFileSelected($event)" name="cvFile"
+                    class="w-full p-2   focus:outline-none focus:ring focus:ring-blue-500" />
+            </div>
+
+            <!-- Buttons -->
+            <div class="flex justify-end gap-4">
+                <button type="button" (click)="closeForm()"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:ring focus:ring-gray-300">
+                    Cancel
+                </button>
+                <button type="submit"
+                    class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 focus:ring focus:ring-blue-300">
+                    Add
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+}
+@if(isViewCandidate == true)
+{
+    <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
+            <div class="w-full justify-between flex">
+                <div class="font-bold text-lg">Candidate Details</div>
+                <button class=" text-lg font-semibold ml-4 " (click)="closeViewCandidate()">x</button>
+            </div>
+
+            <div class="justify-between flex mt-4">
+                <div class="flex flex-col ">
+                    <div class="text-xs">Name </div>
+                    <div class="font-semibold text-md">{{this.viewCandidate.name}}</div>
+                </div>
+                <div class="flex flex-col ">
+                    <div class="text-xs">Email </div>
+                    <div class="font-semibold text-md">{{this.viewCandidate.email}}</div>
+                </div>
+                <div class="flex flex-col ">
+                    <div class="text-xs">Mobile Number </div>
+                    <div class="font-semibold text-md">{{this.viewCandidate.mobile}}</div>
+                </div>
+                <div class="flex flex-col ">
+                    <div class="text-xs">Location </div>
+                    <div class="font-semibold text-md">{{this.viewCandidate.cityName}}</div>
+                </div>
+            </div>
+            <div class="justify-between flex mt-4">
+                <div class="flex flex-col ">
+                    <div class="text-xs">Status </div>
+                    <div class="border font-semibold text-center items-center rounded" 
+                    [ngClass]="getStatusClass(this.viewCandidate.statusName)">
+                        {{ this.viewCandidate.statusName }}
+                    </div>
+                </div>
+                <div class="flex flex-col ">
+                    <div class="text-xs">Interview Date</div>
+                    <div class="font-semibold text-md"> {{ this.viewCandidate.interviewDate ? (this.viewCandidate.interviewDate | date: 'dd-MM-yyyy') : '--' }}</div>
+                </div>
+                <div class="flex flex-col ">
+                    <div class="text-xs">Current CTC </div>
+                    <div class="font-semibold text-sm">{{this.viewCandidate.ctc}}</div>
+                </div>
+                <div class="flex flex-col ">
+                    <div class="text-xs">Expected CTC </div>
+                    <div class="font-semibold text-md">{{this.viewCandidate.expectedCtc}}</div>
+                </div>
+                @if(this.viewCandidate.candidateId != null)
+                {
+                    <button (click)="viewCV(this.viewCandidate.candidateId)">View CV</button>
+                }
+                
+            </div>
+        </div>
+    </div>
+}
+
+<div
+    class="relative overflow-x-auto shadow-md sm:rounded-lg max-w-screen-xl flex flex-wrap items-center justify-between mx-auto mt-4">
+    <table class="w-full text-sm text-left rtl:text-right text-gray-500 ">
+
+        <thead class="text-xs uppercase bg-gray-900 text-white ">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    Candidate Name
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Email
+                </th>
+                <th scope="col" class="px-6 py-3 text-right">
+                    Mobile No.
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Location
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-right">
+                    Interview Date
+                </th>
+                <th scope="col" class="px-6 py-3 text-right">
+                    Currecnt CTC
+                </th>
+                <th scope="col" class="px-6 py-3 text-right">
+                    Expected CTC
+                </th>
+                <th scope="col" class="px-6 py-3 text-center">
+                    Status
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    <span class="sr-only">Edit</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let c of filteredCandidates" class="bg-white border-b ">
+                <th scope="row" class="px-6 py-2 font-medium text-gray-900 whitespace-nowrap " (click)="openViewCandidate(c)">
+                    {{ c.name }}
+                </th>
+                <td class="px-6 py-2">
+                    {{ c.email }}
+                </td>
+                <td class="px-6 py-2 text-right">
+                    {{ c.mobile }}
+                </td>
+                <td class="px-6 py-2">
+                    {{ c.cityName }}
+                </td>
+
+                <td class="px-6 py-2 text-right">
+                    {{ c.interviewDate ? (c.interviewDate | date: 'dd-MM-yyyy') : '--' }}
+                </td>
+                <td class="px-6 py-2  text-right">
+                    {{ c.ctc }} LPA
+                </td>
+                <td class="px-6 py-2 text-right">
+                    {{ c.expectedCtc }} LPA
+                </td>
+                <td class="px-6 py-2 text-cente">
+                    <div class="border font-semibold text-center items-center rounded" 
+                    [ngClass]="getStatusClass(c.statusName)">
+                        {{ c.statusName }}
+                    </div>
+
+                </td>
+                <td class="px-6 py-2 text-right">
+                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
