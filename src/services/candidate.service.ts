@@ -52,6 +52,10 @@ export class CandidateService {
 
   editCandidate(candidate: AddOrEditCandidate): Observable<ResponseModel<any>> {
      
-    return this.http.post<ResponseModel<any>>(`${this.apiUrl}/editCandidate`, candidate);
+    return this.http.put<ResponseModel<any>>(`${this.apiUrl}/editCandidate`, candidate);
+  }
+  deactivateCandidate(candidateID: string): Observable<ResponseModel<any>> {
+     
+    return this.http.delete<ResponseModel<any>>(`${this.apiUrl}/deactivatecandidate?candidateId=${candidateID}`);
   }
 }

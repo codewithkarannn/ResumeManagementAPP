@@ -60,7 +60,9 @@ export class DashboardComponent implements OnInit{
     cityName : '',
     statusName :'',
     createdAt: undefined, 
-    cvFileName : ''
+    cvFileName : '',
+    countryId : 0,
+    countryaName: ''
   };
   
 candidates  :  Candidate[] =[];
@@ -80,7 +82,7 @@ filteredCandidates : Candidate[]=[];
     if (this.candidate.interviewDate) {
       this.formattedDate = this.datePipe.transform(this.candidate.interviewDate, 'dd/MM/yyyy');
     }
-    console.log(this.countries)
+   
   }
   OnLogout(): void {
     this.authService.logout();
@@ -121,7 +123,7 @@ filteredCandidates : Candidate[]=[];
             }
             });
         }
-        
+        this.getAllCandidates();
       },
       error: (err) => {
         alert(err.error?.message || 'Failed to add candidate.');
@@ -129,7 +131,7 @@ filteredCandidates : Candidate[]=[];
     });
   }
 
-  onEditSubmit(existingcandidate : Candidate) {
+  onEditSubmit() {
    
     
  
@@ -143,19 +145,41 @@ filteredCandidates : Candidate[]=[];
           this.candidateService.uploadcv(this.candidate.candidateId , this.cvFile).subscribe({
             next: (response) => {
               this.candidate =  response.data;
-              alert('Candidate added successfully!');
+              alert('Candidate edited successfully!');
+              this.router.navigate(['/dashboard']);
             },
             error: (err) => {
               alert(err.error?.message || 'Failed to add candidate.');
             }
             });
         }
-        
+        alert('Candidate edited successfully!');
+        this.getAllCandidates();
+        this.router.navigate(['/dashboard']);
+
       },
       error: (err) => {
         alert(err.error?.message || 'Failed to add candidate.');
       },
     });
+  }
+
+  onEditClick(candidateID : string){
+    this.isEditFormVisible =  true ;
+   
+    this.candidateService.getCandidateByCandidateID(candidateID).subscribe({
+      next: (response) => {
+        this.viewCandidate =  response.data;
+        this.candidate =  this.viewCandidate;
+        this.candidate.cityId = this.viewCandidate.cityId;
+        this.selectedCountryId = this.viewCandidate.countryId;
+       
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Failed to fetch  candidate.');
+      },
+    });
+   
   }
    getCountries() {
     this.candidateService.getCountries().subscribe({
@@ -283,6 +307,19 @@ filteredCandidates : Candidate[]=[];
     this.candidateService.getCandidateByCandidateID(candidateID).subscribe({
       next: (response) => {
         this.viewCandidate =  response.data;
+      },
+      error: (err) => {
+        alert(err.error?.message || 'Failed to fetch  candidate.');
+      },
+    });
+  }
+
+  deactivateCandidate(candidateID : string) {
+   
+    this.candidateService.deactivateCandidate(candidateID).subscribe({
+      next: (response) => {
+        this.viewCandidate =  response.data;
+        this.getAllCandidates();
       },
       error: (err) => {
         alert(err.error?.message || 'Failed to fetch  candidate.');

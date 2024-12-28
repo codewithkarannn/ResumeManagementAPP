@@ -181,10 +181,6 @@
                     class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
                     placeholder="Enter interview feedback"></textarea>
             </div>
-
-
-
-
             <!-- CV File Field -->
             <div>
                 <label for="cvFile" class="block text-sm font-medium text-gray-700">Upload CV</label>
@@ -257,9 +253,15 @@
                 </div>
                 @if(this.viewCandidate.candidateId != null && this.viewCandidate.cvFileName != null)
                 {
-                    <button (click)="viewCV(this.viewCandidate.candidateId)">View CV</button>
+                    <button class="text-white  bg-gray-900 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2" (click)="viewCV(this.viewCandidate.candidateId)">View CV</button>
                 }
-                
+                @else
+                {
+                    <p>No Cv uploaded</p>
+                }
+                <div>
+                    <p>{{this.viewCandidate.interviewFeedback}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -270,7 +272,7 @@
     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl">
         <h2 class="text-lg font-bold mb-4">Edit New Candidate</h2>
 
-        <form (ngSubmit)="onSubmit()" class="space-y-3">
+        <form (ngSubmit)="onEditSubmit()" class="space-y-3">
             <div class="flex w-full gap-2 justify-between">
 
                 <!-- Name Field -->
@@ -411,7 +413,7 @@
 
             <!-- Buttons -->
             <div class="flex justify-end gap-4">
-                <button type="button" (click)="closeForm()"
+                <button type="button" (click)="isEditFormVisible = false"
                     class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 focus:ring focus:ring-gray-300">
                     Cancel
                 </button>
@@ -457,9 +459,13 @@
                 <th scope="col" class="px-6 py-3 text-center">
                     Status
                 </th>
-                <th scope="col" class="px-6 py-3">
-                    <span class="sr-only" >Edit</span>
-                </th>
+                @if(isAdmin === true)
+                {
+                    <th scope="col" class="px-6 py-3">
+                        <span class="sr-only" >Edit</span>
+                    </th> 
+                }
+                
             </tr>
         </thead>
         <tbody>
@@ -484,7 +490,7 @@
                     {{ c.ctc  ? (c.ctc ) + " LPA" : '--'  }} 
                 </td>
                 <td class="px-6 py-2 text-right">
-                    {{ c.expectedCtc  ? (c.expectedCtc ) + " LPA" : '--' }} LPA
+                    {{ c.expectedCtc  ? (c.expectedCtc ) + " LPA" : '--' }}
                 </td>
                 <td class="px-6 py-2 text-cente">
                     <div class="border font-semibold text-center items-center rounded" 
@@ -493,9 +499,18 @@
                     </div>
 
                 </td>
-                <td class="px-6 py-2 text-right">
-                    <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                </td>
+                @if(isAdmin == true){
+                    <td class="px-6 py-2 text-right flex gap-3">
+                        @if(c.candidateId != null  )
+                        {
+                            <a  class="font-medium text-blue-600 " (click)="onEditClick(c.candidateId)" >Edit</a>
+                            <a  class="font-medium text-red-600 " (click)="deactivateCandidate(c.candidateId)" >De-activate</a>
+                        
+                        }
+                        
+                    </td>
+                }
+                
             </tr>
         </tbody>
     </table>

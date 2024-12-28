@@ -25,6 +25,8 @@ export interface AddOrEditCandidate  {
     statusId: number; // Required integer
     cityId: number; // Required integer
     cityName: string;
+    countryId: number; // Required integer
+    countryaName: string;
     statusName : string;
     cvFileName : string;
     createdAt?: Date; // Optional Date
