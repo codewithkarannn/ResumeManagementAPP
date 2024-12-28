@@ -38,7 +38,7 @@ Update appsettings.json
 
 Locate the appsettings.json file in your project and update the ConnectionStrings section with your MySQL server details:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   json"ConnectionStrings": {      "DefaultConnection": "server=your_server;user=your_user;password=your_password;database=your_database;"  }   `
+`   json"ConnectionStrings": {      "DefaultConnection": "server=your_server;user=your_user;password=your_password;database=your_database;"  }   `
 
 _(Replace placeholders with your actual MySQL server address, username, password, and database name.)_
 
@@ -50,7 +50,7 @@ Install Pomelo.EntityFrameworkCore.MySql Package
 
 If you haven't already added the Pomelo.EntityFrameworkCore.MySql package to your project, install it using:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   bashdotnet add package Pomelo.EntityFrameworkCore.MySql   `
+`   bashdotnet add package Pomelo.EntityFrameworkCore.MySql   `
 
 This package provides the necessary libraries for connecting to MySQL databases using Entity Framework Core.
 
@@ -58,8 +58,7 @@ Creating the DbContext Class
 ----------------------------
 
 Create a class that inherits from DbContext. This class will manage the connection to your database and define entities (models) that represent your database tables. Here’s a basic example:
-
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   csharppublic class MyDbContext : DbContext  {      public MyDbContext(IConfiguration configuration) : base(configuration.GetConnectionString("DefaultConnection"))      {      }      // Define your DbSet properties here, representing your database tables (e.g., DbSet Users)  }   `
+`   csharppublic class MyDbContext : DbContext  {      public MyDbContext(IConfiguration configuration) : base(configuration.GetConnectionString("DefaultConnection"))      {      }      // Define your DbSet properties here, representing your database tables (e.g., DbSet Users)  }   `
 
 The constructor injects the IConfiguration interface to access the connection string from appsettings.json.
 
@@ -71,7 +70,7 @@ Add the Initial Migration
 
 To create an initial migration file that defines the initial schema for your database, run:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   bashdotnet ef migrations add InitialCreate   `
+`   bashdotnet ef migrations add InitialCreate   `
 
 This command generates a new migration file (e.g., InitialCreate.cs) representing the initial state of your database schema.
 
@@ -83,7 +82,7 @@ Update the Database
 
 After creating the migration file, apply it to create the database schema and tables by running:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   bashdotnet ef database update   `
+`   bashdotnet ef database update   `
 
 This command uses the migration file to create necessary tables and structures in your MySQL database based on defined entities in your DbContext class.
 
